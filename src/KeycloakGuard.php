@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use KeycloakGuard\Exceptions\TokenException;
 use KeycloakGuard\Exceptions\UserNotFoundException;
 use KeycloakGuard\Exceptions\ResourceAccessNotAllowedException;
+use Illuminate\Support\Facades\Log;
 
 class KeycloakGuard implements Guard
 {
@@ -36,6 +37,7 @@ class KeycloakGuard implements Guard
   private function authenticate()
   {
     try {
+      Log::channel('vapor')->info($this->config['realm_public_key']);
       $this->decodedToken = Token::decode($this->request->bearerToken(), $this->config['realm_public_key']);
     } catch (\Exception $e) {
       throw new TokenException($e->getMessage());
